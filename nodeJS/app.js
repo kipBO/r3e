@@ -23,28 +23,25 @@ wsServer.on("connection", function(ws) {    // what should a websocket do on con
   const options = {
     auth : loginUser+':'+loginPass //here you put your credentials
   }
-  http.get(url, options, (response) => {
-    let chunks = [];
-    //console.log(response.statusCode);
-    response.responseType="text";
-    response.on('data', function(data) {
-        chunks.push(data);
-    }).on('end', function() {
+      http.get(url, options, (response) => {
+      let chunks = [];
+      //console.log(response.statusCode);
+      response.responseType="text";
+      response.on('data', function(data) {
+          chunks.push(data);
+      }).on('end', function() {
         let data   = Buffer.concat(chunks);
-        //let schema = JSON.parse(data);
-        let schema = JSON.stringify(data);
-        //console.log(schema);
+        let schema = JSON.parse(data);
         wsServer.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {     // check if client is ready
-                client.send(schema);
-                console.log(schema);
+                client.send(JSON.stringify(schema));
             }
         })
 
+      })
+    }).on("error", (error) => {
+      console.log(error)
     })
-  }).on("error", (error) => {
-    console.log(error)
-  })
 
   ws.on("message", function(msg) {        // what to do on message event
       wsServer.clients.forEach(function each(client) {
