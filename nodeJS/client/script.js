@@ -21,12 +21,9 @@ function msgGeneration(msg, from) {
 
 mywsServer.onmessage = function(event) {
     const { data } = event;
-	let schema = JSON.parse(data);
-    //console.log(schema); // is die "schema" van de api
-	for (let item of data) {
-		console.log(item);
-		msgGeneration(item, "Server");
-	}
-    //msgGeneration(schema, "Server");
-	console.log('ok');
+    let schema = JSON.parse(data);
+    console.log(schema);
+    schema.messages.forEach((object) => {
+        msgGeneration(object.Message, object.UserName)
+    })
 }
